@@ -1,14 +1,13 @@
 package com.test.sql.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.test.sql.model.entity.Contact;
 import com.test.sql.model.service.ContactsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
@@ -18,6 +17,8 @@ public class HelloController {
 
     private final ContactsService contactsService;
 
+    private final ObjectMapper mapper = new ObjectMapper();
+
     @Autowired
     public HelloController(ContactsService contactsService) {
         this.contactsService = contactsService;
@@ -25,12 +26,17 @@ public class HelloController {
 
     @GetMapping(path = "/contacts")
     public ResponseEntity getContacts(@RequestParam String nameFilter) {
-
         try {
-            Set<Contact> response = contactsService.findByRegex();
+            Set<Contact> response = contactsService.findByRegex(nameFilter);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(mapper.createObjectNode().put("message", e.getMessage()),
+                    HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping(path = "/contacts")
+    public ResponseEntity saveContacts(@RequestBody Contact contact) {
+        return new ResponseEntity<>(contactsService.saveContact(contact), HttpStatus.OK);
     }
 }

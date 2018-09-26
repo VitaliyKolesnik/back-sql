@@ -1,9 +1,10 @@
 package com.test.sql;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.test.*"})
 public class SqlApplication {
 
     public static void main(String[] args) {

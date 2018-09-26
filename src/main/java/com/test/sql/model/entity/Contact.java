@@ -3,13 +3,23 @@ package com.test.sql.model.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 @Data
-@Entity(name = "contacts")
+@Entity
+@Table(name = "contacts")
 public class Contact {
 
-    private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String name;
+
+    public Contact() {
+    }
+
+    public Contact(String name) {
+        this.name = name;
+    }
 }
