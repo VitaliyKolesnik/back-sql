@@ -1,7 +1,6 @@
 package com.test.sql.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.test.sql.model.entity.Contact;
 import com.test.sql.model.service.ContactsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/hello")
@@ -27,7 +26,7 @@ public class HelloController {
     @GetMapping(path = "/contacts")
     public ResponseEntity getContacts(@RequestParam String nameFilter) {
         try {
-            Set<Contact> response = contactsService.findByRegex(nameFilter);
+            List<Contact> response = contactsService.findByRegex(nameFilter);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(mapper.createObjectNode().put("message", e.getMessage()),
