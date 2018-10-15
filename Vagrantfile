@@ -14,9 +14,12 @@ Vagrant::Config.run do |config|
   config.vm.box = "ubuntu/trusty64"
   config.vm.host_name = "postgresql" 
 
-  config.vm.share_folder "bootstrap", "/mnt/bootstrap", ".", :create => true
-  config.vm.provision :shell, :path => "Vagrant-setup/bootstrap.sh"
+  config.vm.share_folder "app", "/mnt/app", ".", :create => true
+  config.vm.provision :shell, :path => "vagrant-installs.sh"
   
   # PostgreSQL Server port forwarding
-  config.vm.forward_port 5432, 15432
+  #config.vm.forward_port 5432, 8282
+
+  # Tomcat server port forwarding
+  config.vm.forward_port 8080, 8080
 end

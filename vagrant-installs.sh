@@ -14,9 +14,9 @@ PG_VERSION=9.4
 # Changes below this line are probably not necessary
 ###########################################################
 print_db_usage () {
-  echo "Your PostgreSQL database has been setup and can be accessed on your local machine on the forwarded port (default: 15432)"
+  echo "Your PostgreSQL database has been setup and can be accessed on your local machine on the forwarded port (default: 8282)"
   echo "  Host: localhost"
-  echo "  Port: 15432"
+  echo "  Port: 8282"
   echo "  Database: $APP_DB_NAME"
   echo "  Username: $APP_DB_USER"
   echo "  Password: $APP_DB_PASS"
@@ -31,10 +31,10 @@ print_db_usage () {
   echo "  PGUSER=$APP_DB_USER PGPASSWORD=$APP_DB_PASS psql -h localhost $APP_DB_NAME"
   echo ""
   echo "Env variable for application development:"
-  echo "  DATABASE_URL=postgresql://$APP_DB_USER:$APP_DB_PASS@localhost:15432/$APP_DB_NAME"
+  echo "  DATABASE_URL=postgresql://$APP_DB_USER:$APP_DB_PASS@localhost:8282/$APP_DB_NAME"
   echo ""
   echo "Local command to access the database via psql:"
-  echo "  PGUSER=$APP_DB_USER PGPASSWORD=$APP_DB_PASS psql -h localhost -p 15432 $APP_DB_NAME"
+  echo "  PGUSER=$APP_DB_USER PGPASSWORD=$APP_DB_PASS psql -h localhost -p 8282 $APP_DB_NAME"
 }
 
 export DEBIAN_FRONTEND=noninteractive
@@ -99,3 +99,18 @@ date > "$PROVISIONED_ON"
 echo "Successfully created PostgreSQL dev virtual machine."
 echo ""
 print_db_usage
+
+apt-get install -y maven
+
+apt-get install -y software-properties-common python-software-properties
+echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+add-apt-repository ppa:webupd8team/java -y
+apt-get update
+apt-get install -y oracle-java8-installer
+echo "Setting environment variables for Java 8.."
+apt-get -y install -y oracle-java8-set-default
+
+echo "All are installed"
+mvn -f /mnt/app/pom.xml clean package
+
+java -jar /mnt/app/target/sql-1.0.jar
