@@ -7,7 +7,7 @@ console from the project root:
 $ vagrant up
 ```
 You should have free 8080 port on your host.
-If you want run the application on enother port just find raw in Vargantfile:
+If you want run the application on enother port just find raw in Vagrantfile:
 ```sh
 config.vm.forward_port 8080, 8080
 ```
